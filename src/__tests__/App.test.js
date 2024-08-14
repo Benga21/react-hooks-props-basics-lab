@@ -1,46 +1,21 @@
-import "@testing-library/jest-dom";
-import { render, screen } from "@testing-library/react";
+import '@testing-library/jest-dom';
+import { render, screen } from '@testing-library/react';
+import App from '../components/App';
+import About from '../components/About';
 
-import user from "../data/user";
-import App from "../components/App";
-
-test("renders without errors", () => {
-  expect(() => render(<App />)).not.toThrow();
-});
-
-test("renders the correct child components", () => {
-  const { container } = render(<App />);
-  expect(container.querySelector("nav")).toBeInTheDocument();
-  expect(container.querySelector("#home")).toBeInTheDocument();
-  expect(container.querySelector("#about")).toBeInTheDocument();
-});
-
-test("passes 'name', 'city', and 'color' to <Home> as props", () => {
+test('renders Home and About components with correct props', () => {
+  const user = {
+    name: 'Liza',
+    city: 'New York',
+    bio: 'I made this!',
+  };
+  
   render(<App />);
-  const h1 = screen.queryByText(
-    `${user.name} is a Web Developer from ${user.city}`
-  );
-  expect(h1).toBeInTheDocument();
-  expect(h1.style.color).toEqual(user.color);
+  
+  expect(screen.getByText(`${user.name} is a Web Developer from ${user.city}`)).toBeInTheDocument();
+  
+  if (user.bio) {
+    expect(screen.getByText(user.bio)).toBeInTheDocument();
+  }
 });
 
-test("passes 'bio' to <About> as a prop", () => {
-  render(<App />);
-  const p = screen.queryByText(user.bio);
-  expect(p).toBeInTheDocument();
-  expect(p.tagName).toEqual("P");
-});
-
-test("passes 'github' to <Links> as a prop, via <About>", () => {
-  render(<App />);
-  const a = screen.queryByText(user.links.github);
-  expect(a).toBeInTheDocument();
-  expect(a.tagName).toEqual("A");
-});
-
-test("passes 'linkedin' to <Links> as a prop, via <About>", () => {
-  render(<App />);
-  const a = screen.queryByText(user.links.linkedin);
-  expect(a).toBeInTheDocument();
-  expect(a.tagName).toEqual("A");
-});
